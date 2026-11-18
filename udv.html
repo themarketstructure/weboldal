@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sikeres fizetés – The Market Structure</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="logo.webp">
+<style>
+:root{--bg:#060807;--bg-2:#0c110e;--line:#1a241e;--fg:#f2f5f3;--muted:#98a69d;--green:#3CFF3C}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#dfe6e1;font-family:Manrope,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;line-height:1.65;font-size:17px}
+.wrap{max-width:640px;margin:0 auto;padding:48px 16px 80px}
+img{width:96px}
+h1{font-size:clamp(1.8rem,6vw,2.6rem);line-height:1.15;margin:20px 0 10px;color:var(--fg)}
+h1 em{font-style:normal;color:var(--green)}
+.btn{display:block;text-align:center;background:var(--green);color:#041004;font-weight:800;text-decoration:none;border-radius:999px;padding:1em 1.4em;margin:24px 0;font-size:1.1rem}
+ol{padding-left:1.2em} li{margin:10px 0}
+.box{background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:10px;padding:14px 18px;margin:20px 0}
+.muted{color:var(--muted);font-size:.9rem}
+a{color:var(--green)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<img src="logo.webp" alt="The Market Structure">
+<h1>Sikeres fizetés, <em>üdv a közösségben!</em></h1>
+<p>Köszönjük a csatlakozást. Már csak egy lépés van hátra: a <b>személyes Discord-meghívódat e-mailben küldjük</b> a hello@themarketstructure.hu címről, általában 1–2 órán belül.</p>
+<ol>
+<li><b>Nyisd meg a meghívólevelet, és kattints a „Belépek a Discordra” gombra.</b> Ha még nincs Discord-fiókod, a Discord pár perc alatt létrehozza veled.</li>
+<li><b>Fogadd el a szerver szabályzatát</b>, és válaszd ki, mely piacokról kérsz értesítést (BTC, indexek és olaj, részvények).</li>
+<li><b>Az Előfizető rangot</b> a fizetéskor megadott Discord-felhasználóneved alapján kapod meg, legkésőbb 24 órán belül, általában pár órán belül. Ezzel nyílnak meg a tagsághoz tartozó szobák.</li>
+</ol>
+<div class="box"><b>A meghívó személyes:</b> egyszer használható, és 7 napig érvényes, ezért ne add tovább. Ha 3 órán belül sem érkezik meg (nézd meg a Promóciók és a Spam mappát is), ha lejárt, ha elírtad a felhasználónevedet, vagy 24 óra után sincs meg a rang, írj a <a href="mailto:hello@themarketstructure.hu">hello@themarketstructure.hu</a> címre.</div>
+<p class="muted">A fizetésről a Stripe külön e-mailben küld nyugtát. Az előfizetés bármikor lemondható, a részleteket az <a href="aszf.html">ÁSZF</a>-ben találod.<br>Nem befektetési tanács. © 2026 The Market Structure ev.</p>
+</div>
+<script>
+(function(){
+  function send(e){try{var q=new URLSearchParams(location.search),ref='';try{ref=document.referrer?new URL(document.referrer).hostname:''}catch(x){}
+    if(ref===location.hostname)ref='';var u=q.get('utm_source')||q.get('ref')||'';
+    var src='/t.php?p='+encodeURIComponent(location.pathname+(q.get('t')?'?t='+q.get('t'):''))+'&r='+encodeURIComponent(ref)+'&u='+encodeURIComponent(u)+(e?'&e='+encodeURIComponent(e):'')+'&z='+Date.now();
+    if(navigator.sendBeacon){navigator.sendBeacon(src)}else{new Image().src=src}}catch(x){}}
+  send('');
+  document.addEventListener('click',function(ev){var a=ev.target.closest&&ev.target.closest('a');if(!a)return;var h=a.getAttribute('href')||'';
+    if(/buy\.stripe\.com/.test(h))send(a.id==='buy-yearly'?'stripe-eves':'stripe-havi');
+    else if(/discord\.gg/.test(h))send('discord');
+    else if(/axentiq|bingx|mexc/i.test(h))send('partner-'+(h.match(/axentiq|bingx|mexc/i)||[''])[0].toLowerCase());},true);
+  document.addEventListener('submit',function(ev){var f=ev.target;if(f&&(f.id==='nl'||f.id==='nlpop-f'))send('ebook');},true);
+})();
+</script>
+</body>
+</html>

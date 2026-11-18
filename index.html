@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="logo.webp">
+<title>The Market Structure</title>
+<meta name="description" content="The Market Structure – napi piaci elemzések, élő streamek és zárt Discord-közösség BTC, indexek, olaj és részvények témában.">
+<meta property="og:title" content="The Market Structure – napi piaci elemzések és Discord-közösség">
+<meta property="og:description" content="Reggeli makró, élő New York-i stream, kulcsszintek BTC-re, olajra és részvényekre, átlátható pozíciónapló. Nem befektetési tanács.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://themarketstructure.hu/">
+<meta property="og:image" content="https://themarketstructure.hu/logo.webp">
+<meta property="og:locale" content="hu_HU">
+<meta name="theme-color" content="#0b0d12">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sötét „terminál” oldal, bal oldalon szöveg, jobbra élő volume-profile vászon; szekciók egy oszlopban, 1120px-es sínen */
+:root{
+  --bg:#060807; --bg-2:#0c110e; --line:#1a241e; --fg:#f2f5f3; --muted:#98a69d;
+  --green:#3cff3c; --green-dim:#1f8a2a; --violet:#b06bff; --pink:#ff5fd2;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono)}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:clamp(1.7rem,3.6vw,2.6rem);font-weight:700}
+h3{font-size:1.05rem;font-weight:700;letter-spacing:0}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.btn{display:inline-flex;align-items:center;gap:.6em;font-weight:700;text-decoration:none;border-radius:999px;padding:.95em 1.5em;font-size:1rem;transition:transform .15s ease,box-shadow .2s ease,background .2s ease;border:1px solid transparent;cursor:pointer}
+.btn:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+.btn-primary{background:var(--green);color:#041004;box-shadow:0 0 0 0 rgba(60,255,60,.0)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 32px rgba(60,255,60,.35)}
+.btn-ghost{border-color:#2b3a31;color:var(--fg)}
+.btn-ghost:hover{border-color:var(--violet);box-shadow:0 0 24px rgba(176,107,255,.25)}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(6,8,7,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.nav img{height:54px;width:auto;display:block}
+.nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;font-size:.95rem;color:var(--muted)}
+.nav ul a{text-decoration:none}.nav ul a:hover{color:var(--fg)}
+.nav .btn{padding:.6em 1.1em;font-size:.9rem}
+@media (max-width:820px){.nav ul{display:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:70%;height:120%;background:radial-gradient(closest-side,rgba(176,107,255,.18),transparent 70%);pointer-events:none}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding-block:72px 64px;position:relative}
+.hero h1{font-size:clamp(2.2rem,5.2vw,4rem);font-weight:800}
+.hero h1 em{font-style:normal;color:var(--green);text-shadow:0 0 28px rgba(60,255,60,.45)}
+.hero .lead{margin-top:22px;font-size:1.15rem;color:#cfd8d2;max-width:34em}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero .note{margin-top:16px;font-size:.88rem;color:var(--muted)}
+.chartbox{position:relative;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#09100b,#060807);min-width:0;box-shadow:0 0 0 1px rgba(60,255,60,.04),0 30px 80px rgba(0,0,0,.6)}
+.chartbox header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.chartbox header b{color:var(--fg);font-weight:600}
+.chartbox header .up{color:var(--green)}
+#vp{display:block;width:100%;height:auto;aspect-ratio:5/4;max-width:100%}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;padding-block:48px}}
+
+/* ticker */
+.ticker{border-bottom:1px solid var(--line);background:var(--bg-2);overflow:hidden}
+.ticker .row{display:flex;gap:44px;padding:14px 0;white-space:nowrap;font-family:var(--mono);font-size:.85rem;color:var(--muted);animation:slide 38s linear infinite;width:max-content}
+.ticker .row span b{color:var(--fg);font-weight:600}
+.ticker .row span i{font-style:normal;color:var(--green)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+section{padding-block:96px}
+.sec-head{display:grid;gap:14px;max-width:720px;margin-bottom:48px}
+.sec-head p{color:var(--muted);font-size:1.08rem}
+
+/* what you get */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.cell{background:var(--bg);padding:28px 26px;display:grid;gap:12px;align-content:start;min-width:0}
+.cell .tag{font-family:var(--mono);font-size:.74rem;color:var(--violet);letter-spacing:.06em}
+.cell p{color:var(--muted);font-size:.98rem}
+.cell code{font-family:var(--mono);font-size:.82rem;color:var(--green)}
+@media (max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.grid{grid-template-columns:1fr}}
+
+/* day */
+.day{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.slot{border-top:2px solid var(--green-dim);padding-top:18px;display:grid;gap:8px;min-width:0}
+.slot time{font-family:var(--mono);font-size:1.6rem;font-weight:600;color:var(--fg);font-variant-numeric:tabular-nums}
+.slot.live{border-top-color:var(--pink)}
+.slot.live time{color:var(--pink);text-shadow:0 0 18px rgba(255,95,210,.4)}
+.slot p{color:var(--muted);font-size:.95rem}
+@media (max-width:800px){.day{grid-template-columns:1fr 1fr}}
+@media (max-width:460px){.day{grid-template-columns:1fr}}
+
+/* alert demo */
+.alert{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.dc{background:#111316;border:1px solid #23262c;border-radius:14px;padding:18px;font-size:.95rem;min-width:0}
+.dc .who{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.dc .av{width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--violet),var(--pink));flex:none}
+.dc .name{font-weight:700}.dc .bot{font-size:.65rem;background:#5865f2;color:#fff;border-radius:4px;padding:1px 5px;margin-left:6px;font-weight:700;vertical-align:2px}
+.dc .when{color:#80848e;font-size:.78rem;margin-left:6px}
+.dc .msg{padding-left:46px;color:#dbdee1}
+.dc .msg b{color:#fff}
+.dc + .dc{margin-top:12px}
+.levels{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.levels span{font-family:var(--mono);font-size:.8rem;border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:var(--muted)}
+@media (max-width:860px){.alert{grid-template-columns:1fr}}
+
+/* method */
+.method{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.term{border:1px solid var(--line);border-radius:16px;padding:24px;display:grid;gap:10px;background:linear-gradient(180deg,rgba(176,107,255,.05),transparent 60%)}
+.term h3{font-family:var(--mono);font-size:1rem;color:var(--green)}
+.term p{color:var(--muted);font-size:.97rem}
+@media (max-width:700px){.method{grid-template-columns:1fr}}
+
+/* pricing */
+.price{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:stretch;border:1px solid #2a3a2f;border-radius:22px;padding:40px;background:radial-gradient(120% 140% at 100% 0%,rgba(60,255,60,.08),transparent 55%),var(--bg-2);position:relative;overflow:hidden}
+.price .amount{font-family:var(--display);font-size:clamp(2.6rem,6vw,4.2rem);font-weight:800;line-height:1;margin-top:18px;font-variant-numeric:tabular-nums}
+.price .amount small{font-family:var(--body);font-size:1rem;font-weight:600;color:var(--muted);margin-left:8px}
+.price ul{list-style:none;margin:0;padding:0;display:grid;gap:12px;align-content:center}
+.price li{display:flex;gap:12px;align-items:flex-start}
+.price li::before{content:"";flex:none;width:9px;height:9px;margin-top:.55em;border-radius:2px;background:var(--green);box-shadow:0 0 10px var(--green)}
+.price .fine{margin-top:16px;color:var(--muted);font-size:.88rem}
+@media (max-width:820px){.price{grid-template-columns:1fr;padding:28px}}
+
+/* newsletter */
+.news{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.news form{display:flex;gap:10px;flex-wrap:wrap}
+.news input{flex:1 1 240px;min-width:0;background:var(--bg-2);border:1px solid #2b3a31;border-radius:999px;color:var(--fg);padding:.95em 1.3em;font:inherit}
+.news input:focus{outline:2px solid var(--violet);outline-offset:2px}
+.news .ok{margin-top:12px;color:var(--green);font-size:.95rem;min-height:1.5em}
+@media (max-width:820px){.news{grid-template-columns:1fr}}
+
+/* faq */
+.faq{display:grid;gap:10px;max-width:820px}
+details{border:1px solid var(--line);border-radius:14px;padding:18px 22px;background:var(--bg)}
+details[open]{border-color:#2b3a31}
+summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--mono);color:var(--green)}
+details[open] summary::after{content:"–"}
+details p{margin-top:12px;color:var(--muted)}
+
+/* partners */
+.partners{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.partner{display:grid;gap:10px;align-content:start;text-decoration:none;border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--bg-2);transition:border-color .2s,box-shadow .2s;min-width:0}
+.partner:hover{border-color:var(--violet);box-shadow:0 0 28px rgba(176,107,255,.18)}
+.partner .tag{font-family:var(--mono);font-size:.74rem;color:var(--violet);letter-spacing:.06em}
+.partner p{color:var(--muted);font-size:.95rem}
+.partner .go{color:var(--green);font-weight:700;font-size:.92rem;margin-top:4px}
+@media (max-width:820px){.partners{grid-template-columns:1fr}}
+
+/* plans */
+.plans{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:16px;align-items:stretch}
+.plan{border:1px solid var(--line);border-radius:20px;padding:28px;display:grid;gap:12px;align-content:start;background:var(--bg-2);position:relative;min-width:0}
+.plan.best{border-color:#2f6b35;background:radial-gradient(120% 120% at 100% 0%,rgba(60,255,60,.10),transparent 60%),var(--bg-2);box-shadow:0 0 40px rgba(60,255,60,.08)}
+.plan .amount{font-family:var(--display);font-size:clamp(1.8rem,3.2vw,2.4rem);white-space:nowrap;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.plan .amount small{font-family:var(--body);font-size:.95rem;font-weight:600;color:var(--muted);margin-left:6px}
+.plan .btn{justify-content:center;margin-top:8px}
+.badge{position:absolute;top:-12px;right:20px;background:var(--pink);color:#1a0414;font-weight:800;font-size:.78rem;padding:5px 12px;border-radius:999px;box-shadow:0 0 18px rgba(255,95,210,.45)}
+.incl{list-style:none;margin:0;padding:24px 8px 24px 20px;display:grid;gap:12px;align-content:center}
+.incl li{display:flex;gap:12px}
+.incl li::before{content:"";flex:none;width:9px;height:9px;margin-top:.55em;border-radius:2px;background:var(--green);box-shadow:0 0 10px var(--green)}
+.fine{color:var(--muted);font-size:.88rem}
+@media (max-width:900px){.plans{grid-template-columns:1fr 1fr}.incl{grid-column:1/-1;padding:8px 0}}
+@media (max-width:560px){.plans{grid-template-columns:1fr}}
+/* trades */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.stat{background:var(--bg);padding:20px;display:grid;gap:4px}
+.stat b{font-family:var(--mono);font-size:1.6rem;font-weight:600;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:.85rem}
+.pos{color:var(--green)}.neg{color:var(--pink)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px}
+.trades{width:100%;border-collapse:collapse;font-size:.92rem;min-width:720px}
+.trades th{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:400}
+.trades td{padding:14px 16px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.trades tr:last-child td{border-bottom:0}
+.chip{font-family:var(--mono);font-size:.75rem;border-radius:999px;padding:3px 10px;border:1px solid}
+.chip.open{color:var(--violet);border-color:#4a3466}.chip.closed{color:var(--muted);border-color:var(--line)}
+@media (max-width:700px){.stats{grid-template-columns:1fr 1fr}}
+/* videos */
+.vids{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.vid{display:grid;gap:8px;text-decoration:none;min-width:0}
+.thumb{aspect-ratio:16/9;max-width:100%;border-radius:12px;background:linear-gradient(135deg,#132016,#1d1328) center/cover no-repeat;border:1px solid var(--line);display:grid;place-items:center;transition:border-color .2s}
+.vid:hover .thumb{border-color:var(--green)}
+.play{width:44px;height:44px;border-radius:50%;background:rgba(6,8,7,.75);display:grid;place-items:center;color:var(--green);font-size:.9rem}
+.vt{font-weight:700;font-size:.95rem;line-height:1.35}
+.vd{color:var(--muted);font-size:.78rem}
+@media (max-width:900px){.vids{grid-template-columns:1fr 1fr}}
+/* about */
+.about{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:center}
+.portrait{width:100%;height:auto;border-radius:20px;border:1px solid var(--line);box-shadow:0 0 0 1px rgba(176,107,255,.08),0 30px 60px rgba(0,0,0,.5)}
+.social{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.social a{font-family:var(--mono);font-size:.82rem;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+.social a:hover{border-color:var(--green);color:var(--green)}
+@media (max-width:820px){.about{grid-template-columns:1fr}.portrait{max-width:420px}}
+/* reviews */
+.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.review{border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:10px;background:var(--bg-2)}
+.review .stars{color:var(--green);letter-spacing:2px}
+.review p{color:#cfd8d2}
+.review cite{font-style:normal;color:var(--muted);font-size:.85rem}
+.reviews:empty{display:none}
+@media (max-width:820px){.reviews{grid-template-columns:1fr}}
+/* guides */
+.guides{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
+.guides li{border-left:2px solid var(--violet);padding-left:14px;display:grid}
+.guides span{color:var(--muted);font-size:.9rem}
+.dl{display:grid;gap:8px;margin-top:8px}
+.dl a{color:var(--green);font-weight:700;text-decoration:none}
+
+footer{border-top:1px solid var(--line);padding-block:40px;color:var(--muted);font-size:.88rem}
+footer .wrap{display:grid;gap:18px}
+footer .top{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+footer img{height:44px;width:auto}
+footer nav{display:flex;gap:20px;flex-wrap:wrap}
+footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
+
+@media (prefers-reduced-motion:reduce){.ticker .row{animation:none}*{transition:none!important}}
+</style>
+
+<header class="nav">
+  <div class="wrap">
+    <a href="#top" aria-label="The Market Structure – kezdőlap"><img src="logo.webp" alt="The Market Structure"></a>
+    <ul>
+      <li><a href="#mit-kapsz">Mit kapsz</a></li>
+      <li><a href="#napirend">Napirend</a></li>
+      <li><a href="#poziciok">Pozíciók</a></li>
+      <li><a href="#rolam">Rólam</a></li>
+      <li><a href="#tagsag">Tagság</a></li>
+      <li><a href="#partnerek">Partnerek</a></li>
+      <li><a href="#gyik">GYIK</a></li>
+    </ul>
+    <a class="btn btn-primary" href="#tagsag">Csatlakozom</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" style="padding-block:0">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Discord-közösség · napi elemzés · élő stream</p>
+        <h1 style="margin-top:18px">Olvasd a piacot <em>szerkezetből</em>, ne hírekből.</h1>
+        <p class="lead">Minden hétköznap friss rajz a BTC-ről, az S&amp;P 500-ról, az olajról és a részvényekről, reggeli makró-összefoglaló és élő New York-i nyitás. Mindez egy helyen, egy közösségben, ahol látod, hogyan gondolkodik egy aktív kereskedő.</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href="#tagsag">Csatlakozom – 13 990 Ft/hó</a>
+          <a class="btn btn-ghost" href="#napirend">Hogyan néz ki egy nap?</a>
+        </div>
+        <p class="note">Havi előfizetés bankkártyával, bármikor lemondható.</p>
+      </div>
+      <div class="chartbox" aria-label="Szemléltető forgalmi profil ábra">
+        <header><span><b>BTCUSD</b> · 30m · forgalmi profil</span><span class="up">POC · VAH · LVN</span></header>
+        <canvas id="vp" width="1000" height="800" role="img" aria-label="Árfolyamgyertyák, mellettük a forgalmi profil, kiemelve a POC és az alacsony forgalmú zóna"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="row">
+      <span><b>BTC</b> cél 62 000 <i>· imbalance 71–68k átütve</i></span>
+      <span><b>NVDA</b> cél 186,3 $ <i>· +10% · 173 $ GAP-zárás</i></span>
+      <span><b>TSM</b> kiszálló <i>· 430 $ riasztás</i></span>
+      <span><b>Fed</b> 50 bp? <i>· hűtik a várakozást</i></span>
+      <span><b>WTI</b> riasztás élesítve <i>· 85 $</i></span>
+      <span><b>BNY</b> cél 166,97 $ <i>· +10%</i></span>
+      <span><b>ABEV</b> cél 3,06 $ <i>· +10%</i></span>
+      <span><b>BTC</b> cél 62 000 <i>· imbalance 71–68k átütve</i></span>
+      <span><b>NVDA</b> cél 186,3 $ <i>· +10% · 173 $ GAP-zárás</i></span>
+      <span><b>TSM</b> kiszálló <i>· 430 $ riasztás</i></span>
+      <span><b>Fed</b> 50 bp? <i>· hűtik a várakozást</i></span>
+      <span><b>WTI</b> riasztás élesítve <i>· 85 $</i></span>
+      <span><b>BNY</b> cél 166,97 $ <i>· +10%</i></span>
+      <span><b>ABEV</b> cél 3,06 $ <i>· +10%</i></span>
+    </div>
+  </div>
+
+  <section id="mit-kapsz">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Mit kapsz a tagsággal</p>
+        <h2>Nem jelzéseket árulunk. Megmutatjuk, mit látunk és miért.</h2>
+        <p>A Discordon minden szoba egy konkrét feladatot lát el. Reggel tudod, mi a terv, napközben riasztást kapsz, ha az ár egy szinthez ér, délután pedig élőben átbeszéljük.</p>
+      </div>
+      <div class="grid">
+        <div class="cell"><span class="tag">#btc-traccsparti</span><h3>Friss BTC-rajzok</h3><p>Long- és short-zónák, likviditás, célárak. Nem utólag magyarázunk, a rajz előre kint van.</p></div>
+        <div class="cell"><span class="tag">#indexek-olaj</span><h3>Indexek és olaj</h3><p>S&amp;P 500, WTI olaj és arany, ugyanazzal a szemlélettel, heti és napi szintekkel.</p></div>
+        <div class="cell"><span class="tag">#makrogazdagság</span><h3>Reggeli makró</h3><p>Minden hétköznap reggel a legfontosabb hírek röviden: infláció, Fed, hozamok, olaj, geopolitika.</p></div>
+        <div class="cell"><span class="tag">#részvények</span><h3>Részvény-watchlist</h3><p>Swing-jelöltek kb. 20 napos időtávra, AI-alapú elemzésekkel, a belépőtől a zárásig követve.</p></div>
+        <div class="cell"><span class="tag">#riasztások</span><h3>Szintriasztások</h3><p>TradingView-riasztások egyenesen a Discordra. Amikor az ár odaér, azonnal megkapod: <code>WTI 85 $ · BTC 72 300 $</code></p></div>
+        <div class="cell"><span class="tag">#stream-archívum</span><h3>Élő stream és archívum</h3><p>Hétköznap 15:15-kor New York-i nyitás élőben, a felvételek visszanézhetők. Kérdezhetsz közben.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="napirend" style="background:var(--bg-2);border-block:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Egy átlagos hétköznap</p>
+        <h2>Fix ritmus, hogy ne neked kelljen mindent figyelni.</h2>
+      </div>
+      <div class="day">
+        <div class="slot"><time>08:15</time><h3>Reggeli makró</h3><p>A nap legfontosabb hírei és adatai a #makrogazdagság szobában.</p></div>
+        <div class="slot"><time>09:00</time><h3>Friss rajzok</h3><p>BTC, indexek, olaj: hol vannak a szintek, mi a terv, mikor nincs teendő.</p></div>
+        <div class="slot"><time>Napközben</time><h3>Riasztások</h3><p>Ha az ár egy figyelt szinthez ér, a rendszer azonnal szól a Discordon.</p></div>
+        <div class="slot live"><time>15:15</time><h3>New York Open élőben</h3><p>A nyitást együtt nézzük: mi történt, mit csinálunk, mire várunk.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap alert">
+      <div class="sec-head" style="margin-bottom:0">
+        <p class="eyebrow">Így szól a riasztás</p>
+        <h2>Nem kell egész nap a chartot nézned.</h2>
+        <p>A fontos szinteket előre bejelöljük. Amikor az ár odaér, üzenetet kapsz a telefonodra, és látod, mire figyelünk a reakciónál.</p>
+        <div class="levels" aria-label="Aktív riasztási szintek példa">
+          <span>BTC 72 300</span><span>BTC 76 000</span><span>WTI 85,00</span>
+        </div>
+      </div>
+      <div>
+        <div class="dc">
+          <div class="who"><span class="av" aria-hidden="true"></span><span><span class="name">TMS Riasztás</span><span class="bot">APP</span><span class="when">ma 14:32</span></span></div>
+          <p class="msg">🛢️ <b>WTI olaj riasztás</b> – az árfolyam elérte a <b>85 $</b>-os szintet (most: 84,97 $). Figyeljük a reakciót! 👀</p>
+        </div>
+        <div class="dc">
+          <div class="who"><span class="av" aria-hidden="true"></span><span><span class="name">TMS Riasztás</span><span class="bot">APP</span><span class="when">ma 16:05</span></span></div>
+          <p class="msg">🚨 <b>BTC riasztás</b> – az árfolyam elérte a <b>72 300 $</b>-os szintet. Ez az utolsó támaszzóna, figyeljük a reakciót! 👀</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="szemlelet" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">A szemlélet</p>
+        <h2>Ahol a forgalom beszél, ott születik a döntés.</h2>
+        <p>Nem indikátor-salátával dolgozunk. Azt nézzük, hol kereskedtek sokat és hol keveset, és ebből építünk tervet. Ezek a fogalmak a közösségben mindennaposak:</p>
+      </div>
+      <div class="method">
+        <div class="term"><h3>POC · Point of Control</h3><p>Az a szint, ahol egy időszakban a legtöbb kereskedés történt. Gyakran mágnesként húzza vissza az árat.</p></div>
+        <div class="term"><h3>Alacsony forgalmú terület · LVN</h3><p>Olyan sáv, ahol kevés kereskedés történt, ezért az ár gyorsan átszalad rajta. Elsősorban belépőnek jó, de célnak is használható.</p></div>
+        <div class="term"><h3>Single print</h3><p>Egyetlen gyors mozgással létrejött rés a profilban. Sokszor ide tér vissza az ár, mielőtt folytatja.</p></div>
+        <div class="term"><h3>Likviditás</h3><p>Ott van, ahol a stopmegbízások sűrűsödnek. Belépés előtt megnézzük, hol számíthatunk egy kisöprésre.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="poziciok" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Pozíciók · nyílt napló</p>
+        <h2>Amit mondunk, azt mi is megvesszük.</h2>
+        <p>A részvény-watchlistből nyitott saját pozícióinkat itt vezetjük: mikor, mennyit és mennyiért vettünk és adtunk el. Nyerőt és vesztest egyaránt.</p>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="tablewrap"><table class="trades"><thead><tr><th>Eszköz</th><th>Irány</th><th>Nyitás</th><th>Mennyiség</th><th>Belépő</th><th>Zárás</th><th>Eredmény</th><th>Állapot</th></tr></thead><tbody id="trades"></tbody></table></div>
+      <p class="fine" style="margin-top:12px">Az eredmények saját számlánk valós pozícióiból származnak, díjak nélkül számolva. A múltbeli hozam nem garantálja a jövőbelit.</p>
+    </div>
+  </section>
+
+  <section id="videok" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Legutóbbi videók</p><h2>Minden hétköznap élőben</h2><p>A New York-i nyitás felvételei és a rövid elemzések a YouTube-csatornán.</p></div>
+      <div class="vids">
+        <a class="vid" href="https://youtu.be/pgOvglgKD4s" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(https://i.ytimg.com/vi/pgOvglgKD4s/hqdefault.jpg)"><span class="play">▶</span></span><span class="vt">New York Open – Kamatemelés beárazva</span><span class="vd mono">2026.11.11.</span></a>
+        <a class="vid" href="https://youtu.be/RLki8Qr0y8I" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(https://i.ytimg.com/vi/RLki8Qr0y8I/hqdefault.jpg)"><span class="play">▶</span></span><span class="vt">Kamatemelés beárazva – olaj és BTC reggeli kép</span><span class="vd mono">2026.11.11.</span></a>
+        <a class="vid" href="https://youtu.be/qde344-AuI8" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(https://i.ytimg.com/vi/qde344-AuI8/hqdefault.jpg)"><span class="play">▶</span></span><span class="vt">New York Open – Az baj</span><span class="vd mono">2026.11.10.</span></a>
+        <a class="vid" href="https://youtu.be/hjCYnNUvsds" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(https://i.ytimg.com/vi/hjCYnNUvsds/hqdefault.jpg)"><span class="play">▶</span></span><span class="vt">New York Open – CPI buli következik</span><span class="vd mono">2026.11.09.</span></a>
+      </div>
+      <a class="btn btn-ghost" style="margin-top:24px" href="https://www.youtube.com/@themarketstructure" target="_blank" rel="noopener">Összes videó a YouTube-on</a>
+    </div>
+  </section>
+
+  <section id="rolam" style="padding-top:0">
+    <div class="wrap about" style="grid-template-columns:1fr;max-width:820px">
+      <div class="sec-head" style="margin-bottom:0">
+        <p class="eyebrow">Ki van a csatorna mögött?</p>
+        <h2>Palumbéli Máté</h2>
+        <p>Vegyészmérnökként végeztem, öt éve kereskedem aktívan. Ez alatt rengeteget tanultam, buktam, és felálltam a veszteségekből. A BTC-vel kezdtem, és 2025-ig csak kriptóval foglalkoztam. 2025 óta a határidős indexek, az S&amp;P 500, az olaj és a részvények is ugyanezzel a forgalmi szemlélettel kerülnek a chartomra.</p>
+        <p>2024 óta építem a The Market Structure közösséget. Kurzust és bootcampet tartottam, minden hétköznap élőben streamelek, és a Discordon azt mutatom meg, amit én magam is csinálok, utólagos magyarázkodás nélkül.</p>
+        <div class="social">
+          <a href="https://www.youtube.com/@themarketstructure" target="_blank" rel="noopener">YouTube</a>
+          <a href="https://www.instagram.com/the.marketstructure/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.tiktok.com/@marketstructure" target="_blank" rel="noopener">TikTok</a>
+          <a href="https://www.facebook.com/share/151B7fNi9DR/" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ertekelesek" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Értékelések</p><h2>Mit mondanak, akik már velünk vannak?</h2></div>
+      <div class="reviews" id="reviews"></div>
+      <div class="ctas" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:20px">
+        <a class="btn btn-ghost" href="https://maps.app.goo.gl/6kzZfFzZbjjDBVnF8" target="_blank" rel="noopener">Google-értékelések</a>
+        <a class="btn btn-ghost" href="https://www.facebook.com/share/151B7fNi9DR/" target="_blank" rel="noopener">Facebook-értékelések</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="tagsag" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Discord-tagság</p><h2>Egy tagság, minden szoba.</h2><p>Mindkét csomag ugyanazt tartalmazza. Az éves csomaggal két hónapot ajándékba kapsz.</p></div>
+      <div class="plans">
+        <div class="plan">
+          <p class="eyebrow" style="color:var(--muted)">Havi</p>
+          <p class="amount mono">13 990 Ft<small>/ hó</small></p>
+          <p class="fine">Havonta megújul, bármikor lemondható.</p>
+          <a class="btn btn-ghost" id="buy-monthly" href="https://buy.stripe.com/6oU7sM4qAfS96p74wDeAg06" target="_blank" rel="noopener">Havi tagság</a>
+        </div>
+        <div class="plan best">
+          <span class="badge">2 hónap ajándék</span>
+          <p class="eyebrow">Éves</p>
+          <p class="amount mono">139 900 Ft<small>/ év</small></p>
+          <p class="fine">Havonta 11 658 Ft, így a havi csomaghoz képest évente 27 980 Ft-ot spórolsz.</p>
+          <a class="btn btn-primary" id="buy-yearly" href="https://buy.stripe.com/7sY5kE6yI8pHcNvgfleAg07" target="_blank" rel="noopener">Éves tagság</a>
+        </div>
+        <ul class="incl">
+          <li>Hozzáférés az összes elemző szobához (BTC, altcoinok, S&amp;P 500, olaj, részvények)</li>
+          <li>Reggeli makró-összefoglaló minden hétköznap</li>
+          <li>TradingView-szintriasztások a Discordon</li>
+          <li>Élő New York Open stream és stream-archívum</li>
+          <li>Részvény-watchlist AI-alapú elemzésekkel</li>
+          <li>Ticketes segítségkérés és egy aktívan kereskedő közösség</li>
+        </ul>
+      </div>
+      <p class="fine" style="margin-top:16px">Biztonságos bankkártyás fizetés a Stripe-on keresztül.</p>
+    </div>
+  </section>
+
+  <section id="partnerek" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Partnereink</p>
+        <h2>Az eszközök, amelyeket mi is használunk</h2>
+        <p>Ha ezeken a linkeken keresztül regisztrálsz, akár kedvezményt vagy bónuszt is kaphatsz, és közben a közösséget is támogatod.</p>
+      </div>
+      <div class="partners">
+        <a class="partner" href="https://axentiqcapital.com/?ref=marketstructure" target="_blank" rel="noopener sponsored">
+          <span class="tag">Részvényelemzés</span><h3>Axentiq Capital</h3><p>AI-alapú elemzések és figyelőlista swing-kereskedéshez. Ezzel készülnek a részvény-watchlistjeink.</p><span class="go">Regisztrálok →</span></a>
+        <a class="partner" href="https://bingxdao.com/partner/TheMarketStructure" target="_blank" rel="noopener sponsored">
+          <span class="tag">Kriptotőzsde</span><h3>BingX</h3><p>Kripto határidős és spot kereskedés, copy trading. Magyar kapcsolattartóval. Meghívókód: <b>TWDHQA</b></p><span class="go">Regisztrálok →</span></a>
+        <a class="partner" href="https://promote.mexc.com/a/ZOiOIoU7" target="_blank" rel="noopener sponsored">
+          <span class="tag">Kriptotőzsde</span><h3>MEXC</h3><p>Széles altcoin-kínálat és alacsony díjak a határidős piacon.</p><span class="go">Regisztrálok →</span></a>
+      </div>
+      <p class="fine" style="margin-top:16px;color:var(--muted);font-size:.85rem"><b>Hirdetés</b> · Affiliate linkek: a regisztrációd után a partnertől jutalékot kaphatunk, ez neked nem kerül többe.</p>
+    </div>
+  </section>
+
+  <section id="hirlevel" style="padding-top:0">
+    <div class="wrap news">
+      <div class="sec-head" style="margin-bottom:0">
+        <p class="eyebrow">Ingyenes e-bookok · hírlevél</p>
+        <h2>Válassz egy ingyenes e‑bookot, és már küldjük is.</h2>
+        <p>Három rövid útmutató közül választhatsz. Feliratkozás után e-mailt küldünk: a levélben lévő gombbal töltöd le a választott e-bookot PDF-ben. Hetente kétszer hírlevelet is küldünk a legfontosabb makróhírekkel, és azzal, hogyan olvassuk őket a chartokon. Spam nélkül, bármikor leiratkozhatsz.</p>
+        
+      </div>
+      <div>
+        <form id="nl" novalidate>
+          <div class="ebk" role="radiogroup" aria-label="Melyik e-bookot kéred?"><label><input type="radio" name="nl-t" value="profil" checked><span><b>A forgalmi profil 10 percben</b><small>POC, forgalmi zóna, LVN</small></span></label><label><input type="radio" name="nl-t" value="rutin"><span><b>Reggeli rutin 15 perc alatt</b><small>Makró, szintek, ha–akkor terv</small></span></label><label><input type="radio" name="nl-t" value="kockazat"><span><b>Kockázatkezelés az 1%-os szabállyal</b><small>Pozícióméret, R, napi korlátok</small></span></label></div>
+          <label for="nl-email" class="mono" style="position:absolute;left:-9999px">E-mail cím</label>
+          <input id="nl-email" type="email" placeholder="e-mail-címed" autocomplete="email" required>
+          <button class="btn btn-primary" type="submit">Kérem az e-bookot</button>
+        </form>
+        <p class="ok" id="nl-ok" role="status"></p>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:6px">A feliratkozással elfogadod az <a href="adatkezeles.html" style="color:inherit;text-decoration:underline">adatkezelési tájékoztatót</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="gyik" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Gyakori kérdések</p><h2>Mielőtt csatlakozol</h2></div>
+      <div class="faq">
+        <details><summary>Kezdőként is van értelme csatlakozni?</summary><p>Igen. A rajzoknál mindig leírjuk, mit miért nézünk, és bármit kérdezhetsz a szobákban vagy élőben a stream alatt. Ha teljesen az alapokról indulsz, a 🎫 segítség szobában vagy élőben segítünk.</p></details>
+        <details><summary>Mennyi időt kell rászánnom naponta?</summary><p>Elég reggel 10 perc a makróra és a rajzokra. A riasztások szólnak, ha valami történik, a délutáni stream pedig visszanézhető.</p></details>
+        <details><summary>Miben más, mint a YouTube-csatorna?</summary><p>A YouTube-on a nagy képet mutatjuk. A Discordon napi szinten, konkrét szintekkel, riasztásokkal és közvetlen kérdés-válasszal dolgozunk.</p></details>
+        <details><summary>Hogyan fizetek, és hogyan mondhatom le?</summary><p>Bankkártyával, a Stripe biztonságos fizetési oldalán. Az előfizetés a választott időszak (hónap vagy év) végén automatikusan megújul. Bármikor lemondhatod, ilyenkor a kifizetett időszak végéig bent maradsz.</p></details>
+        <details><summary>Befektetési tanácsot adtok?</summary><p>Nem. A közösségben oktatási céllal mutatjuk meg, hogyan elemezzük a piacot. Minden döntést te hozol, a saját felelősségedre.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <img src="logo.webp" alt="The Market Structure">
+      <nav aria-label="Lábléc">
+        <a href="#mit-kapsz">Mit kapsz</a><a href="#tagsag">Tagság</a><a href="#partnerek">Partnerek</a><a href="#gyik">GYIK</a><a href="https://www.youtube.com/@themarketstructure" target="_blank" rel="noopener">YouTube</a><a href="https://www.instagram.com/the.marketstructure/">Instagram</a><a href="https://www.tiktok.com/@marketstructure">TikTok</a><a href="https://www.facebook.com/share/151B7fNi9DR/">Facebook</a><a href="aszf.html">ÁSZF</a><a href="adatkezeles.html">Adatkezelés</a>
+      </nav>
+    </div>
+    <p>A The Market Structure tartalmai kizárólag oktatási célt szolgálnak, nem minősülnek befektetési tanácsadásnak. A tőkeáttételes kereskedés jelentős kockázattal jár, a befektetett összeg egésze elveszhet.</p>
+    <p class="mono">© 2026 The Market Structure · themarketstructure.hu</p>
+  </div>
+</footer>
+
+<!-- Látogatottságmérés: Vercel Web Analytics, a Vercelre telepítés után működik -->
+
+<script>
+(function(){
+  // ---- hírlevél: MailerLite
+  window.tmsSubscribe=function(v,t){var F={profil:"203930850363966733",rutin:"203932405587772537",kockazat:"203932446224287388"};var fd=new FormData();fd.append("fields[email]",v);fd.append("ml-submit","1");fd.append("anticsrf","true");try{localStorage.setItem("tms_nl","done")}catch(e){}return fetch("https://assets.mailerlite.com/jsonp/2789949/forms/"+(F[t]||F.profil)+"/subscribe",{method:"POST",body:fd,mode:"no-cors"});};
+  window.tmsValid=function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)};
+  var f=document.getElementById("nl"), ok=document.getElementById("nl-ok");
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    var v=document.getElementById("nl-email").value.trim(), t=(f.querySelector("input[name=nl-t]:checked")||{}).value;
+    if(!tmsValid(v)){ok.style.color="#ff5fd2";ok.textContent="Ez nem tűnik érvényes e-mail-címnek. Nézd meg még egyszer.";return;}
+    ok.style.color="";ok.textContent="Küldjük…";
+    tmsSubscribe(v,t).then(function(){ok.textContent="Elküldtük az e-bookot – nyisd meg a leveled, és a gombbal töltsd le. (Ha nem látod, nézd meg a Promóciók mappát is.)";f.reset();})
+      .catch(function(){ok.style.color="#ff5fd2";ok.textContent="Valami hiba történt. Próbáld újra pár perc múlva.";});
+  });
+
+  // ---- nyílt pozíciónapló (frissítés: csak ezt a listát kell bővíteni)
+  var TRADES=[
+    {t:'RBLX',name:'Roblox',dir:'Long 2x',open:'2026.09.14.',qty:'2,203 db',entry:'51,07 $',close:'53,82 $ (10.28.)',ret:10.75,status:'closed',asof:null},
+    {t:'TSM',name:'Taiwan Semiconductor',dir:'Long',open:'2026.11.09.',qty:'2 db',entry:'391,74 $',close:null,ret:-8.18,status:'open',asof:'11.17.'},
+    {t:'NVDA',name:'NVIDIA',dir:'Long',open:'2026.11.09.',qty:'4 db',entry:'169,36 $ (átlag)',close:null,ret:-8.21,status:'open',asof:'11.17.'},
+    {t:'BNY',name:'BNY Mellon',dir:'Long',open:'2026.11.09.',qty:'4 db',entry:'151,79 $',close:null,ret:-1.32,status:'open',asof:'11.17.'},
+    {t:'ABEV',name:'Ambev',dir:'Long',open:'2026.11.09.',qty:'100 db',entry:'2,78 $',close:null,ret:-2.52,status:'open',asof:'11.17.'}
+  ];
+  var tb=document.getElementById('trades');
+  if(tb){TRADES.forEach(function(r){var tr=document.createElement('tr');
+    var ret=r.ret==null?'–':'<span class="'+(r.ret>=0?'pos':'neg')+'">'+(r.ret>=0?'+':'')+r.ret.toFixed(2).replace('.',',')+'%</span>'+(r.status==='open'&&r.asof?' <span class="vd mono">('+r.asof+')</span>':'');
+    tr.innerHTML='<td><b>'+r.t+'</b><br><span class="vd">'+r.name+'</span></td><td>'+r.dir+'</td><td class="mono">'+r.open+'</td><td class="mono">'+r.qty+'</td><td class="mono">'+(r.entry||'–')+'</td><td class="mono">'+(r.close||'–')+'</td><td class="mono">'+ret+'</td><td><span class="chip '+r.status+'">'+(r.status==='open'?'nyitott':'zárt')+'</span></td>';
+    tb.appendChild(tr);});
+    var closed=TRADES.filter(function(r){return r.status==='closed'&&r.ret!=null});
+    var wins=closed.filter(function(r){return r.ret>0}).length;
+    var avg=closed.length?closed.reduce(function(a,r){return a+r.ret},0)/closed.length:null;
+    var st=[[TRADES.length,'pozíció összesen'],[TRADES.filter(function(r){return r.status==='open'}).length,'nyitott'],[closed.length?Math.round(wins/closed.length*100)+'%':'–','nyerő arány (zártak)'],[avg==null?'–':(avg>=0?'+':'')+avg.toFixed(1).replace('.',',')+'%','átlagos eredmény (zártak)']];
+    document.getElementById('stats').innerHTML=st.map(function(x){return '<div class="stat"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>'}).join('');}
+  // ---- értékelések (valódi Google/Facebook értékelésekből töltjük fel)
+  var REVIEWS=[];
+  var rv=document.getElementById('reviews');
+  if(rv) rv.innerHTML=REVIEWS.map(function(r){return '<figure class="review"><span class="stars">★★★★★</span><p>'+r.text+'</p><cite>'+r.name+' · '+r.src+'</cite></figure>'}).join('');
+  // ---- volume profile vászon
+  var c=document.getElementById('vp'); if(!c) return; var x=c.getContext('2d');
+  var W=c.width,H=c.height, padL=40, padR=40, top=40, bot=60;
+  var G='#3cff3c', V='#b06bff', P='#ff5fd2', GRID='#16201a', TXT='#98a69d';
+  // determinisztikus ár-útvonal
+  var seed=7; function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647;}
+  var n=64, closes=[], p=78;
+  var path=[0,-.4,.2,.9,1.6,2.4,2.8,2.1,1.2,.6,.4,.5,.2,-.3,-.6,-.4,-.1,.3,.2,-.2,-.8,-1.5,-2.2,-2.6,-2.9,-3.1,-2.7,-2.9,-3.2,-3.0,-2.6,-2.8,-3.1,-3.4,-3.6,-3.3,-3.0,-3.2,-3.5,-3.8,-4.4,-5.1,-5.4,-5.0,-4.6,-4.8,-4.4,-4.1,-4.3,-3.9,-3.5,-3.2,-2.9,-2.6,-2.4,-2.1,-1.8,-1.9,-1.6,-1.2,-1.0,-.7,-.4,-.2];
+  var o=[],h=[],l=[],cl=[];
+  for(var i=0;i<n;i++){var base=78+path[i]; var op=i? cl[i-1]:base; var cc=base+(rnd()-.5)*.6; o.push(op);cl.push(cc);h.push(Math.max(op,cc)+rnd()*.5);l.push(Math.min(op,cc)-rnd()*.5);}
+  var lo=Math.min.apply(null,l)-.4, hi=Math.max.apply(null,h)+.4;
+  var chartW=W*0.68, profX=padL+chartW+16, profW=W-padR-profX;
+  function y(v){return top+(hi-v)/(hi-lo)*(H-top-bot);}
+  // profil: hisztogram a gyertyák testéből
+  var bins=46, vol=new Array(bins).fill(0);
+  for(var i=0;i<n;i++){for(var k=0;k<bins;k++){var bv=lo+(k+.5)*(hi-lo)/bins; if(bv>=l[i]&&bv<=h[i]) vol[k]+=1+ (bv>=Math.min(o[i],cl[i])&&bv<=Math.max(o[i],cl[i])?1.4:0);}}
+  // single print kivágás
+  var poc=0;for(var k=1;k<bins;k++) if(vol[k]>vol[poc]) poc=k;
+  var maxv=vol[poc];
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var t0=null, DUR=reduce?1:1600;
+  function draw(ts){
+    if(!t0) t0=ts; var q=Math.min(1,(ts-t0)/DUR); var e=1-Math.pow(1-q,3);
+    x.clearRect(0,0,W,H);
+    // rács
+    x.strokeStyle=GRID;x.lineWidth=1;
+    for(var g=0;g<=8;g++){var yy=top+g*(H-top-bot)/8;x.beginPath();x.moveTo(padL,yy);x.lineTo(W-padR,yy);x.stroke();}
+    // LVN sáv
+    var lvnK=-1,lvnMin=1e9; for(var k=4;k<bins-4;k++){ if(k>poc+3 && vol[k]<lvnMin){lvnMin=vol[k];lvnK=k;} }
+    if(lvnK>0){var y1=y(lo+(lvnK+2)*(hi-lo)/bins), y2=y(lo+(lvnK-1)*(hi-lo)/bins);
+      x.fillStyle='rgba(255,95,210,0.08)';x.fillRect(padL,y1,W-padR-padL,y2-y1);
+      x.fillStyle=P;x.font='600 22px "JetBrains Mono", monospace';x.fillText('LVN',padL+10,y1+26);}
+    // profil oszlopok
+    var bh=(H-top-bot)/bins;
+    for(var k=0;k<bins;k++){var w=vol[k]/maxv*profW*e; var yy=y(lo+(k+1)*(hi-lo)/bins);
+      x.fillStyle = k===poc? G : (Math.abs(k-poc)<=8? 'rgba(176,107,255,0.75)':'rgba(176,107,255,0.35)');
+      x.fillRect(profX+profW-w,yy+1,w,bh-2);}
+    // POC vonal
+    var pocY=y(lo+(poc+.5)*(hi-lo)/bins);
+    x.setLineDash([8,8]);x.strokeStyle=G;x.lineWidth=2;x.beginPath();x.moveTo(padL,pocY);x.lineTo(W-padR,pocY);x.stroke();x.setLineDash([]);
+    x.fillStyle=G;x.font='600 22px "JetBrains Mono", monospace';x.fillText('POC',padL+10,pocY-10);
+    // gyertyák
+    var m=Math.floor(n*e), cw=chartW/n;
+    for(var i=0;i<m;i++){var cx=padL+i*cw+cw/2, up=cl[i]>=o[i];
+      x.strokeStyle=up?G:P; x.fillStyle=up?G:P; x.lineWidth=2;
+      x.beginPath();x.moveTo(cx,y(h[i]));x.lineTo(cx,y(l[i]));x.stroke();
+      var yt=y(Math.max(o[i],cl[i])), yb=y(Math.min(o[i],cl[i])); x.fillRect(cx-cw*0.32,yt,cw*0.64,Math.max(2,yb-yt));}
+    // utolsó ár címke
+    if(m>0){var ly=y(cl[m-1]); x.fillStyle=G; x.fillRect(W-padR-108,ly-16,108,32); x.fillStyle='#041004'; x.font='700 20px "JetBrains Mono", monospace'; x.fillText(String(Math.round(cl[m-1]*940)).replace(/\B(?=(\d{3})+(?!\d))/g,' '),W-padR-100,ly+7);}
+    // idő tengely
+    x.fillStyle=TXT;x.font='400 18px "JetBrains Mono", monospace';
+    ['H','K','Sze','Cs','P'].forEach(function(d,j){x.fillText(d,padL+j*chartW/5+8,H-24);});
+    if(q<1) requestAnimationFrame(draw);
+  }
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){requestAnimationFrame(draw)});} else requestAnimationFrame(draw);
+})();
+</script>
+<!-- e-book pop-up -->
+<style>
+#nlpop{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);padding:16px}
+#nlpop.show{display:flex}
+#nlpop .card{position:relative;width:100%;max-width:440px;background:var(--bg-2);border:1px solid #2b3a31;border-radius:18px;padding:28px 24px;box-shadow:0 0 40px rgba(60,255,60,.12)}
+#nlpop h3{font-family:var(--display);font-size:1.45rem;line-height:1.2;margin:6px 0 10px}
+#nlpop p{color:var(--muted);font-size:.95rem;margin:0 0 14px}
+#nlpop form{display:flex;flex-direction:column;gap:10px}
+#nlpop input{background:var(--bg);border:1px solid #2b3a31;border-radius:999px;color:var(--fg);padding:.9em 1.2em;font:inherit}
+#nlpop .x{position:absolute;top:10px;right:12px;background:none;border:0;color:var(--muted);font-size:1.6rem;line-height:1;cursor:pointer;padding:6px}
+#nlpop .fine{font-size:.78rem;margin:10px 0 0}
+#nlpop .fine a{color:inherit}
+.ebk{display:grid;gap:8px;margin:0 0 10px;width:100%;flex-basis:100%}
+.ebk label{display:flex;gap:12px;align-items:center;border:1px solid #2b3a31;border-radius:12px;padding:10px 14px;cursor:pointer;background:var(--bg)}
+.ebk label:has(input:checked){border-color:var(--green)}
+.ebk input{accent-color:var(--green);width:18px;height:18px;flex:0 0 auto;margin:0;padding:0}
+.ebk span{display:grid;line-height:1.3;text-align:left}
+.ebk b{font-size:.95rem;color:var(--fg)}
+.ebk small{color:var(--muted);font-size:.8rem}
+.news .ebk input{flex:0 0 auto;min-width:0;padding:0;border-radius:50%}
+@media (max-width:600px){#nlpop{align-items:flex-end;padding:0}#nlpop .card{max-width:none;border-radius:18px 18px 0 0}}
+</style>
+<div id="nlpop" role="dialog" aria-modal="true" aria-labelledby="nlpop-t">
+  <div class="card">
+    <button class="x" type="button" aria-label="Bezárás">×</button>
+    <p class="eyebrow" style="margin:0">Ingyenes e-bookok</p>
+    <h3 id="nlpop-t">Válassz egy ingyenes e-bookot</h3>
+    <p>Jelöld be, melyik érdekel, add meg az e-mail-címed, és azonnal küldjük.</p>
+    <form id="nlpop-f" novalidate>
+      <div class="ebk" role="radiogroup" aria-label="Melyik e-bookot kéred?"><label><input type="radio" name="nlpop-t" value="profil" checked><span><b>A forgalmi profil 10 percben</b><small>POC, forgalmi zóna, LVN</small></span></label><label><input type="radio" name="nlpop-t" value="rutin"><span><b>Reggeli rutin 15 perc alatt</b><small>Makró, szintek, ha–akkor terv</small></span></label><label><input type="radio" name="nlpop-t" value="kockazat"><span><b>Kockázatkezelés az 1%-os szabállyal</b><small>Pozícióméret, R, napi korlátok</small></span></label></div>
+      <input id="nlpop-e" type="email" placeholder="e-mail-címed" autocomplete="email" aria-label="E-mail cím" required>
+      <button class="btn btn-primary" type="submit">Kérem az e-bookot</button>
+    </form>
+    <p class="fine" id="nlpop-ok" role="status">A feliratkozással elfogadod az <a href="adatkezeles.html">adatkezelési tájékoztatót</a>. Bármikor leiratkozhatsz.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var p=document.getElementById("nlpop"); if(!p) return;
+  function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  if(get("tms_nl")==="done") return;
+  var until=+get("tms_nl_until")||0; if(Date.now()<until) return;
+  var shown=false;
+  function show(){if(shown||get("tms_nl")==="done")return;shown=true;p.classList.add("show");}
+  function hide(){p.classList.remove("show");set("tms_nl_until",String(Date.now()+7*864e5));}
+  setTimeout(show,15000);
+  window.addEventListener("scroll",function(){var h=document.documentElement;if((h.scrollTop+innerHeight)/h.scrollHeight>0.5)show();},{passive:true});
+  p.querySelector(".x").addEventListener("click",hide);
+  p.addEventListener("click",function(e){if(e.target===p)hide();});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&p.classList.contains("show"))hide();});
+  var f=document.getElementById("nlpop-f"), ok=document.getElementById("nlpop-ok");
+  f.addEventListener("submit",function(e){e.preventDefault();var v=document.getElementById("nlpop-e").value.trim(), t=(f.querySelector("input[name=nlpop-t]:checked")||{}).value;
+    if(!window.tmsValid||!tmsValid(v)){ok.style.color="#ff5fd2";ok.textContent="Ez nem tűnik érvényes e-mail-címnek.";return;}
+    ok.style.color="";ok.textContent="Küldjük…";
+    tmsSubscribe(v,t).then(function(){f.style.display="none";ok.style.color="var(--green)";ok.textContent="Elküldtük az e-bookot – nyisd meg a leveled, és a gombbal töltsd le. (Promóciók mappa!)";setTimeout(function(){p.classList.remove("show")},8000);})
+      .catch(function(){ok.style.color="#ff5fd2";ok.textContent="Valami hiba történt. Próbáld újra pár perc múlva.";});
+  });
+})();
+</script>
+
+<script>
+(function(){
+  function send(e){try{var q=new URLSearchParams(location.search),ref='';try{ref=document.referrer?new URL(document.referrer).hostname:''}catch(x){}
+    if(ref===location.hostname)ref='';var u=q.get('utm_source')||q.get('ref')||'';
+    var src='/t.php?p='+encodeURIComponent(location.pathname+(q.get('t')?'?t='+q.get('t'):''))+'&r='+encodeURIComponent(ref)+'&u='+encodeURIComponent(u)+(e?'&e='+encodeURIComponent(e):'')+'&z='+Date.now();
+    if(navigator.sendBeacon){navigator.sendBeacon(src)}else{new Image().src=src}}catch(x){}}
+  send('');
+  document.addEventListener('click',function(ev){var a=ev.target.closest&&ev.target.closest('a');if(!a)return;var h=a.getAttribute('href')||'';
+    if(/buy\.stripe\.com/.test(h))send(a.id==='buy-yearly'?'stripe-eves':'stripe-havi');
+    else if(/discord\.gg/.test(h))send('discord');
+    else if(/axentiq|bingx|mexc/i.test(h))send('partner-'+(h.match(/axentiq|bingx|mexc/i)||[''])[0].toLowerCase());},true);
+  document.addEventListener('submit',function(ev){var f=ev.target;if(f&&(f.id==='nl'||f.id==='nlpop-f'))send('ebook');},true);
+})();
+</script>
