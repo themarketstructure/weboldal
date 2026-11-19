@@ -555,10 +555,10 @@ footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
   // ---- nyílt pozíciónapló (frissítés: csak ezt a listát kell bővíteni)
   var TRADES=[
     {t:'RBLX',name:'Roblox',dir:'Long 2x',open:'2026.09.14.',qty:'2,203 db',entry:'51,07 $',close:'53,82 $ (10.28.)',ret:10.75,status:'closed',asof:null},
-    {t:'TSM',name:'Taiwan Semiconductor',dir:'Long',open:'2026.11.09.',qty:'2 db',entry:'391,74 $',close:null,ret:-9.93,status:'open',asof:'11.19. 18:15'},
-    {t:'NVDA',name:'NVIDIA',dir:'Long',open:'2026.11.09.',qty:'6 db',entry:'162,48 $ (átlag)',close:null,ret:-8.48,status:'open',asof:'11.19. 18:15'},
-    {t:'BNY',name:'BNY Mellon',dir:'Long',open:'2026.11.09.',qty:'4 db',entry:'151,79 $',close:null,ret:-4.68,status:'open',asof:'11.19. 18:15'},
-    {t:'ABEV',name:'Ambev',dir:'Long',open:'2026.11.09.',qty:'100 db',entry:'2,78 $',close:null,ret:-4.5,status:'open',asof:'11.19. 18:15'}
+    {t:'TSM',name:'Taiwan Semiconductor',dir:'Long',open:'2026.11.09.',qty:'2 db',entry:'391,74 $',close:null,ret:-10.12,status:'open',asof:'11.19. NY záró, Yahoo Finance'},
+    {t:'NVDA',name:'NVIDIA',dir:'Long',open:'2026.11.09.',qty:'6 db',entry:'162,48 $ (átlag)',close:null,ret:-10.16,status:'open',asof:'11.19. NY záró, Yahoo Finance'},
+    {t:'BNY',name:'BNY Mellon',dir:'Long',open:'2026.11.09.',qty:'4 db',entry:'151,79 $',close:null,ret:-4.59,status:'open',asof:'11.19. NY záró, Yahoo Finance'},
+    {t:'ABEV',name:'Ambev',dir:'Long',open:'2026.11.09.',qty:'100 db',entry:'2,78 $',close:null,ret:-4.32,status:'open',asof:'11.19. NY záró, Yahoo Finance'}
   ];
   var tb=document.getElementById('trades');
   if(tb){TRADES.forEach(function(r){var tr=document.createElement('tr');
