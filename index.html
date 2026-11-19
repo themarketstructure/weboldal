@@ -226,6 +226,28 @@ footer nav{display:flex;gap:20px;flex-wrap:wrap}
 footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
 
 @media (prefers-reduced-motion:reduce){.ticker .row{animation:none}*{transition:none!important}}
+
+/* Kétutas nyitás (C irány, Máté 2026-11-19) */
+.proof{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;padding:0;font-family:var(--mono);font-size:.78rem;letter-spacing:.04em}
+.proof li{border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.proof a{text-decoration:none}
+.paths-sec{padding-top:64px}
+.paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:20px;margin-top:28px}
+.path{background:var(--bg-2);border:1px solid var(--line);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:12px}
+.path.rec{border:2px solid var(--green);box-shadow:0 0 40px rgba(60,255,60,.10)}
+.path h3{font-size:1.5rem;font-family:var(--body);font-weight:800;letter-spacing:-.02em}
+.path .pp{font-size:1.6rem;margin:0}.path .pp small{display:block;font-size:.85rem;color:var(--muted);font-family:var(--body)}
+.path ul{margin:0;padding-left:1.1em;color:#c9d4cd;line-height:1.7}
+.path .btn{margin-top:auto;justify-content:center}
+.path .tag{font-size:.7rem;background:var(--green);color:#041004;border-radius:999px;padding:3px 9px;margin-left:8px;letter-spacing:.08em}
+.mstick{display:none}
+@media (max-width:720px){
+  .mstick{display:flex;gap:8px;position:fixed;transform:translateY(120%);transition:transform .25s ease;left:0;right:0;bottom:0;z-index:40;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,rgba(6,8,7,0),#060807 35%)}
+  .mstick.on{transform:none}
+  .mstick .btn{white-space:nowrap;padding-inline:18px}
+  .mstick .btn-primary{flex:1;justify-content:center}
+  body{padding-bottom:76px}
+}
 </style>
 
 <header class="nav">
@@ -253,13 +275,40 @@ footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
         <p class="lead">Minden hétköznap friss rajz a BTC-ről, az S&amp;P 500-ról, az olajról és a részvényekről, reggeli makró-összefoglaló és élő New York-i nyitás. Mindez egy helyen, egy közösségben, ahol látod, hogyan gondolkodik egy aktív kereskedő.</p>
         <div class="ctas">
           <a class="btn btn-primary" href="#tagsag">Csatlakozom – 13 990 Ft/hó</a>
-          <a class="btn btn-ghost" href="#napirend">Hogyan néz ki egy nap?</a>
+          <a class="btn btn-ghost" href="#utvalaszto">Előbb ingyen kezdeném</a>
         </div>
         <p class="note">Havi előfizetés bankkártyával, bármikor lemondható.</p>
+        <ul class="proof" aria-label="Röviden rólunk"><li>65 Discord-tag</li><li>5 év aktív kereskedés</li><li><a href="#poziciok">Nyílt pozíciónapló</a></li></ul>
       </div>
       <div class="chartbox" aria-label="Szemléltető forgalmi profil ábra">
         <header><span><b>BTCUSD</b> · 30m · forgalmi profil</span><span class="up">POC · VAH · LVN</span></header>
         <canvas id="vp" width="1000" height="800" role="img" aria-label="Árfolyamgyertyák, mellettük a forgalmi profil, kiemelve a POC és az alacsony forgalmú zóna"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section id="utvalaszto" class="paths-sec">
+    <div class="wrap">
+      <div class="sec-head" style="text-align:center;margin-inline:auto;max-width:720px">
+        <p class="eyebrow">Két út, te döntöd el</p>
+        <h2>Kezdheted ingyen, vagy beléphetsz a közösségbe.</h2>
+      </div>
+      <div class="paths">
+        <div class="path">
+          <p class="eyebrow" style="color:var(--muted)">Ingyenes kezdés</p>
+          <h3>E-book és hírlevél</h3>
+          <p class="pp mono">0 Ft</p>
+          <ul><li>Három rövid útmutató közül választhatsz</li><li>Hetente kétszer a legfontosabb makróhírek</li><li>Bármikor leiratkozhatsz</li></ul>
+          <a class="btn btn-ghost" href="#hirlevel">Kérem az e-bookot</a>
+        </div>
+        <div class="path rec">
+          <p class="eyebrow">Discord-tagság <span class="tag">Ajánlott</span></p>
+          <h3>Minden szoba, minden nap</h3>
+          <p class="pp mono">13 990 Ft/hó <small>vagy 139 900 Ft/év, két hónap ajándék</small></p>
+          <ul><li>Reggeli makró és friss rajzok hétköznap</li><li>Szintriasztások egyenesen a Discordra</li><li>Élő New York-i nyitás, archívummal</li><li>Nyílt pozíciónapló</li></ul>
+          <a class="btn btn-primary" href="#tagsag">Csatlakozom</a>
+          <p class="note" style="text-align:center;margin-top:8px">Bankkártyával · bármikor lemondható</p>
+        </div>
       </div>
     </div>
   </section>
@@ -677,3 +726,5 @@ footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
   document.addEventListener('submit',function(ev){var f=ev.target;if(f&&(f.id==='nl'||f.id==='nlpop-f'))send('ebook');},true);
 })();
 </script>
+<div class="mstick" aria-label="Gyors csatlakozás"><a class="btn btn-primary" href="#tagsag">Csatlakozom</a><a class="btn btn-ghost" href="#hirlevel">Ingyenes e-book</a></div>
+<script>(function(){var m=document.querySelector(".mstick");if(!m)return;function f(){m.classList.toggle("on",window.scrollY>650)}window.addEventListener("scroll",f,{passive:true});f()})();</script>
