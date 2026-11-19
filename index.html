@@ -240,6 +240,16 @@ footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
 .path ul{margin:0;padding-left:1.1em;color:#c9d4cd;line-height:1.7}
 .path .btn{margin-top:auto;justify-content:center}
 .path .tag{font-size:.7rem;background:var(--green);color:#041004;border-radius:999px;padding:3px 9px;margin-left:8px;letter-spacing:.08em}
+.path.news{display:flex;text-align:left;align-items:stretch}.path.news .eyebrow,.path.news h3{text-align:left}.path.news form{display:flex;gap:10px;flex-wrap:wrap}
+.path.news button.btn-ghost{background:transparent;color:var(--fg);border:1px solid #3a4a40;opacity:1;cursor:pointer}.path.news button.btn-ghost:hover{border-color:var(--green)}
+.path .pdesc{color:var(--muted);margin:0;line-height:1.6}
+.prow{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--bg)}
+.prow.best{border-color:rgba(60,255,60,.45)}
+.prow>div{min-width:0;flex:1 1 220px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.prow .pp small{font-size:.8rem}
+.prow .btn{margin-top:0;flex:0 0 auto}
+.badge2{font-size:.72rem;font-weight:700;background:var(--pink,#ff5fd2);color:#1a0414;border-radius:999px;padding:3px 10px}
+.path.rec ul{margin-top:4px}
 .mstick{display:none}
 @media (max-width:720px){
   .mstick{display:flex;gap:8px;position:fixed;transform:translateY(120%);transition:transform .25s ease;left:0;right:0;bottom:0;z-index:40;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,rgba(6,8,7,0),#060807 35%)}
@@ -294,20 +304,39 @@ footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
         <h2>Kezdheted ingyen, vagy beléphetsz a közösségbe.</h2>
       </div>
       <div class="paths">
-        <div class="path">
-          <p class="eyebrow" style="color:var(--muted)">Ingyenes kezdés</p>
-          <h3>E-book és hírlevél</h3>
-          <p class="pp mono">0 Ft</p>
-          <ul><li>Három rövid útmutató közül választhatsz</li><li>Hetente kétszer a legfontosabb makróhírek</li><li>Bármikor leiratkozhatsz</li></ul>
-          <a class="btn btn-ghost" href="#hirlevel">Kérem az e-bookot</a>
+        <div class="path news" id="hirlevel">
+          <p class="eyebrow" style="color:var(--muted)">Ingyenes kezdés · 0 Ft</p>
+          <h3>Válassz egy ingyenes e-bookot</h3>
+          <p class="pdesc">Feliratkozás után e-mailben küldjük a választott útmutatót PDF-ben. Hetente kétszer hírlevél a legfontosabb makróhírekkel, és azzal, hogyan olvassuk őket a chartokon. Bármikor leiratkozhatsz.</p>
+          <form id="nl" novalidate>
+            <div class="ebk" role="radiogroup" aria-label="Melyik e-bookot kéred?"><label><input type="radio" name="nl-t" value="profil" checked><span><b>A forgalmi profil 10 percben</b><small>POC, forgalmi zóna, LVN</small></span></label><label><input type="radio" name="nl-t" value="rutin"><span><b>Reggeli rutin 15 perc alatt</b><small>Makró, szintek, ha–akkor terv</small></span></label><label><input type="radio" name="nl-t" value="kockazat"><span><b>Kockázatkezelés az 1%-os szabállyal</b><small>Pozícióméret, R, napi korlátok</small></span></label></div>
+            <label for="nl-email" class="mono" style="position:absolute;left:-9999px">E-mail cím</label>
+            <input id="nl-email" type="email" placeholder="e-mail-címed" autocomplete="email" required>
+            <button class="btn btn-ghost" type="submit">Kérem az e-bookot</button>
+          </form>
+          <p class="ok" id="nl-ok" role="status"></p>
+          <p class="fine" style="color:var(--muted);font-size:.82rem;margin:0">A feliratkozással elfogadod az <a href="adatkezeles.html" style="color:inherit;text-decoration:underline">adatkezelési tájékoztatót</a>.</p>
         </div>
-        <div class="path rec">
+        <div class="path rec" id="tagsag">
           <p class="eyebrow">Discord-tagság <span class="tag">Ajánlott</span></p>
-          <h3>Minden szoba, minden nap</h3>
-          <p class="pp mono">13 990 Ft/hó <small>vagy 139 900 Ft/év, két hónap ajándék</small></p>
-          <ul><li>Reggeli makró és friss rajzok hétköznap</li><li>Szintriasztások egyenesen a Discordra</li><li>Élő New York-i nyitás, archívummal</li><li>Nyílt pozíciónapló</li></ul>
-          <a class="btn btn-primary" href="#tagsag">Csatlakozom</a>
-          <p class="note" style="text-align:center;margin-top:8px">Bankkártyával · bármikor lemondható</p>
+          <h3>Egy tagság, minden szoba</h3>
+          <div class="prow">
+            <div><p class="pp mono">13 990 Ft<small>/ hó · havonta megújul, bármikor lemondható</small></p></div>
+            <a class="btn btn-ghost" id="buy-monthly" href="https://buy.stripe.com/6oU7sM4qAfS96p74wDeAg06" target="_blank" rel="noopener">Havi tagság</a>
+          </div>
+          <div class="prow best">
+            <div><p class="pp mono">139 900 Ft<small>/ év · havonta 11 658 Ft, évente 27 980 Ft-ot spórolsz</small></p><span class="badge2">2 hónap ajándék</span></div>
+            <a class="btn btn-primary" id="buy-yearly" href="https://buy.stripe.com/7sY5kE6yI8pHcNvgfleAg07" target="_blank" rel="noopener">Éves tagság</a>
+          </div>
+          <ul>
+            <li>Hozzáférés az összes elemző szobához (BTC, altcoinok, S&amp;P 500, olaj, részvények)</li>
+            <li>Reggeli makró-összefoglaló minden hétköznap</li>
+            <li>TradingView-szintriasztások a Discordon</li>
+            <li>Élő New York Open stream és stream-archívum</li>
+            <li>Részvény-watchlist AI-alapú elemzésekkel</li>
+            <li>Ticketes segítségkérés és egy aktívan kereskedő közösség</li>
+          </ul>
+          <p class="note" style="margin:0;font-size:.85rem;color:var(--muted)">Biztonságos bankkártyás fizetés a Stripe-on keresztül.</p>
         </div>
       </div>
     </div>
@@ -458,35 +487,6 @@ footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
     </div>
   </section>
 
-  <section id="tagsag" style="padding-top:0">
-    <div class="wrap">
-      <div class="sec-head"><p class="eyebrow">Discord-tagság</p><h2>Egy tagság, minden szoba.</h2><p>Mindkét csomag ugyanazt tartalmazza. Az éves csomaggal két hónapot ajándékba kapsz.</p></div>
-      <div class="plans">
-        <div class="plan">
-          <p class="eyebrow" style="color:var(--muted)">Havi</p>
-          <p class="amount mono">13 990 Ft<small>/ hó</small></p>
-          <p class="fine">Havonta megújul, bármikor lemondható.</p>
-          <a class="btn btn-ghost" id="buy-monthly" href="https://buy.stripe.com/6oU7sM4qAfS96p74wDeAg06" target="_blank" rel="noopener">Havi tagság</a>
-        </div>
-        <div class="plan best">
-          <span class="badge">2 hónap ajándék</span>
-          <p class="eyebrow">Éves</p>
-          <p class="amount mono">139 900 Ft<small>/ év</small></p>
-          <p class="fine">Havonta 11 658 Ft, így a havi csomaghoz képest évente 27 980 Ft-ot spórolsz.</p>
-          <a class="btn btn-primary" id="buy-yearly" href="https://buy.stripe.com/7sY5kE6yI8pHcNvgfleAg07" target="_blank" rel="noopener">Éves tagság</a>
-        </div>
-        <ul class="incl">
-          <li>Hozzáférés az összes elemző szobához (BTC, altcoinok, S&amp;P 500, olaj, részvények)</li>
-          <li>Reggeli makró-összefoglaló minden hétköznap</li>
-          <li>TradingView-szintriasztások a Discordon</li>
-          <li>Élő New York Open stream és stream-archívum</li>
-          <li>Részvény-watchlist AI-alapú elemzésekkel</li>
-          <li>Ticketes segítségkérés és egy aktívan kereskedő közösség</li>
-        </ul>
-      </div>
-      <p class="fine" style="margin-top:16px">Biztonságos bankkártyás fizetés a Stripe-on keresztül.</p>
-    </div>
-  </section>
 
   <section id="partnerek" style="padding-top:0">
     <div class="wrap">
@@ -507,26 +507,6 @@ footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
     </div>
   </section>
 
-  <section id="hirlevel" style="padding-top:0">
-    <div class="wrap news">
-      <div class="sec-head" style="margin-bottom:0">
-        <p class="eyebrow">Ingyenes e-bookok · hírlevél</p>
-        <h2>Válassz egy ingyenes e‑bookot, és már küldjük is.</h2>
-        <p>Három rövid útmutató közül választhatsz. Feliratkozás után e-mailt küldünk: a levélben lévő gombbal töltöd le a választott e-bookot PDF-ben. Hetente kétszer hírlevelet is küldünk a legfontosabb makróhírekkel, és azzal, hogyan olvassuk őket a chartokon. Spam nélkül, bármikor leiratkozhatsz.</p>
-        
-      </div>
-      <div>
-        <form id="nl" novalidate>
-          <div class="ebk" role="radiogroup" aria-label="Melyik e-bookot kéred?"><label><input type="radio" name="nl-t" value="profil" checked><span><b>A forgalmi profil 10 percben</b><small>POC, forgalmi zóna, LVN</small></span></label><label><input type="radio" name="nl-t" value="rutin"><span><b>Reggeli rutin 15 perc alatt</b><small>Makró, szintek, ha–akkor terv</small></span></label><label><input type="radio" name="nl-t" value="kockazat"><span><b>Kockázatkezelés az 1%-os szabállyal</b><small>Pozícióméret, R, napi korlátok</small></span></label></div>
-          <label for="nl-email" class="mono" style="position:absolute;left:-9999px">E-mail cím</label>
-          <input id="nl-email" type="email" placeholder="e-mail-címed" autocomplete="email" required>
-          <button class="btn btn-primary" type="submit">Kérem az e-bookot</button>
-        </form>
-        <p class="ok" id="nl-ok" role="status"></p>
-        <p style="color:var(--muted);font-size:.82rem;margin-top:6px">A feliratkozással elfogadod az <a href="adatkezeles.html" style="color:inherit;text-decoration:underline">adatkezelési tájékoztatót</a>.</p>
-      </div>
-    </div>
-  </section>
 
   <section id="gyik" style="padding-top:0">
     <div class="wrap">
