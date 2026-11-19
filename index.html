@@ -15,14 +15,14 @@
 <meta name="theme-color" content="#0b0d12">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: sötét „terminál” oldal, bal oldalon szöveg, jobbra élő volume-profile vászon; szekciók egy oszlopban, 1120px-es sínen */
 :root{
   --bg:#060807; --bg-2:#0c110e; --line:#1a241e; --fg:#f2f5f3; --muted:#98a69d;
   --green:#3cff3c; --green-dim:#1f8a2a; --violet:#b06bff; --pink:#ff5fd2;
   --display:"Unbounded","Arial Black",system-ui,sans-serif;
-  --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
   color-scheme:dark;
 }
@@ -49,7 +49,7 @@ p{margin:0}
 /* nav */
 .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(6,8,7,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
-.nav img{height:54px;width:auto;display:block}
+.nav img{height:64px;width:auto;display:block}
 .nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;font-size:.95rem;color:var(--muted)}
 .nav ul a{text-decoration:none}.nav ul a:hover{color:var(--fg)}
 .nav .btn{padding:.6em 1.1em;font-size:.9rem}
@@ -221,7 +221,7 @@ details p{margin-top:12px;color:var(--muted)}
 footer{border-top:1px solid var(--line);padding-block:40px;color:var(--muted);font-size:.88rem}
 footer .wrap{display:grid;gap:18px}
 footer .top{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
-footer img{height:44px;width:auto}
+footer img{height:56px;width:auto}
 footer nav{display:flex;gap:20px;flex-wrap:wrap}
 footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
 
@@ -230,7 +230,7 @@ footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
 
 <header class="nav">
   <div class="wrap">
-    <a href="#top" aria-label="The Market Structure – kezdőlap"><img src="logo.webp" alt="The Market Structure"></a>
+    <a href="#top" aria-label="The Market Structure – kezdőlap"><img src="logo-nagy.png" alt="The Market Structure"></a>
     <ul>
       <li><a href="#mit-kapsz">Mit kapsz</a></li>
       <li><a href="#napirend">Napirend</a></li>
@@ -496,7 +496,7 @@ footer nav a{text-decoration:none}footer nav a:hover{color:var(--fg)}
 <footer>
   <div class="wrap">
     <div class="top">
-      <img src="logo.webp" alt="The Market Structure">
+      <img src="logo-nagy.png" alt="The Market Structure">
       <nav aria-label="Lábléc">
         <a href="#mit-kapsz">Mit kapsz</a><a href="#tagsag">Tagság</a><a href="#partnerek">Partnerek</a><a href="#gyik">GYIK</a><a href="https://www.youtube.com/@themarketstructure" target="_blank" rel="noopener">YouTube</a><a href="https://www.instagram.com/the.marketstructure/">Instagram</a><a href="https://www.tiktok.com/@marketstructure">TikTok</a><a href="https://www.facebook.com/share/151B7fNi9DR/">Facebook</a><a href="aszf.html">ÁSZF</a><a href="adatkezeles.html">Adatkezelés</a>
       </nav>
