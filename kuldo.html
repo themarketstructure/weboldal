@@ -29,12 +29,14 @@ button{margin-top:18px;background:var(--green);color:#041004;font-weight:800;bor
 <input id="bejelentesek" type="password" autocomplete="off" placeholder="beállítva: hagyd üresen, ha nem változik">
 <label for="makrogazdagsag">#makrogazdaság webhook</label>
 <input id="makrogazdagsag" type="password" autocomplete="off" placeholder="beállítva: hagyd üresen, ha nem változik">
+<label for="axentiq">Axentiq-csatorna webhook</label>
+<input id="axentiq" type="password" autocomplete="off" placeholder="beállítva: hagyd üresen, ha nem változik">
 <button type="submit">Mentés ebbe a böngészőbe</button>
 </form>
 </div>
 <script>
 (function(){
-  var K = "tms_webhooks", CS = ["bejelentesek", "makrogazdagsag"], JO = /^https:\/\/discord\.com\/api\/webhooks\/\d+\/[\w-]+$/;
+  var K = "tms_webhooks", CS = ["bejelentesek", "makrogazdagsag", "axentiq"], JO = /^https:\/\/discord\.com\/api\/webhooks\/\d+\/[\w-]+$/;
   function olvas(){ try { return JSON.parse(localStorage.getItem(K) || "{}"); } catch(e) { return {}; } }
   function allapot(){ var h = olvas(), o = {}; CS.forEach(function(c){ o[c] = JO.test(h[c] || ""); }); return o; }
   function mutat(){
@@ -62,6 +64,13 @@ button{margin-top:18px;background:var(--green);color:#041004;font-weight:800;bor
       ids.push((await r.json()).id);
     }
     return { ok: true, ids: ids, csatorna: csatorna };
+  };
+  // Saját üzenet törlése (csak Máté jóváhagyásával): await tmsTorol("bejelentesek", "<üzenet-id>")
+  window.tmsTorol = async function(csatorna, id){
+    var u = olvas()[csatorna];
+    if (!JO.test(u || "")) return { ok: false, hiba: "nincs webhook", csatorna: csatorna };
+    var r = await fetch(u + "/messages/" + encodeURIComponent(id), { method: "DELETE" });
+    return { ok: r.status === 204, status: r.status, id: id };
   };
   document.getElementById("f").addEventListener("submit", function(e){
     e.preventDefault();
