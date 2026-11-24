@@ -1,0 +1,19 @@
+name: Záróárak (NY zárás után)
+on:
+  schedule:
+    - cron: "40 21 * * 1-5"   # 22:40 Budapest (téli idő), a NY-i zárás után
+    - cron: "10 23 * * 1-5"   # tartalék
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  frissit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/scripts/zaroar.py
+      - run: |
+          git config user.name "Aurora (birodalom)"
+          git config user.email "aurora@themarketstructure.hu"
+          git add index.html
+          git diff --cached --quiet || (git commit -m "Záróárak $(date -u +%Y-%m-%d) (Yahoo Finance, automatikus)" && git push)
