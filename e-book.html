@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>E-book letöltése – The Market Structure</title>
+<link rel="icon" href="logo.webp">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060807;--line:#1a241e;--fg:#f2f5f3;--muted:#98a69d;--green:#3cff3c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.k{max-width:520px;width:100%;border:1px solid var(--line);border-radius:16px;padding:36px 28px;background:#0b100d}
+img{height:40px}h1{font-size:28px;line-height:1.2;margin:22px 0 10px}p{color:var(--muted);line-height:1.6;margin:0 0 22px}
+a.g{display:block;text-align:center;background:var(--green);color:#041004;font-weight:800;text-decoration:none;padding:16px;border-radius:10px;font-size:17px}
+.m{font-size:13px;margin-top:22px}.m a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="k">
+  <img src="logo.webp" alt="The Market Structure">
+  <h1 id="cim">Itt az e-bookod</h1>
+  <p id="leir">Kattints a gombra, és megnyílik a PDF. Elmentheted a telefonodra vagy a gépedre.</p>
+  <a class="g" id="gomb" href="ebook/forgalmi-profil-10-percben.pdf">E-book letöltése (PDF)</a>
+  <p class="m">Kérdésed van? Írj a <a href="mailto:hello@themarketstructure.hu">hello@themarketstructure.hu</a> címre. · <a href="/">themarketstructure.hu</a><br>Nem befektetési tanács.</p>
+</div>
+<script>
+var E={profil:["A forgalmi profil 10 percben","ebook/forgalmi-profil-10-percben.pdf"],
+       rutin:["Reggeli rutin 15 perc alatt","ebook/reggeli-rutin-15-perc.pdf"],
+       kockazat:["Kockázatkezelés: az 1%-os szabály","ebook/kockazatkezeles-1-szazalek.pdf"]};
+var t=(new URLSearchParams(location.search).get("t")||"profil").toLowerCase();
+var e=E[t]||E.profil;
+document.getElementById("cim").textContent="Itt az e-bookod: "+e[0];
+document.getElementById("gomb").href=e[1];
+document.title=e[0]+" – The Market Structure";
+</script>
+</body>
+</html>
